@@ -40,10 +40,22 @@ export const caldendarSlice = createSlice({
                 state.events = state.events.filter( event => event.id !== state.activeEvent.id );
                 state.activeEvent = null
             }
+        }, 
+        onLogoutCalendar: ( state ) => {
+            state.isLoadingEvents = true;
+            state.events = [ ];
+            state.activeEvent= null;
         }
     }
 });
 
 
 // Action creators are generated for each case reducer function
-export const { onLoadingEvents, onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent } = caldendarSlice.actions;
+export const { 
+    onLoadingEvents, 
+    onSetActiveEvent, 
+    onAddNewEvent, 
+    onUpdateEvent, 
+    onDeleteEvent, 
+    onLogoutCalendar 
+} = caldendarSlice.actions;
