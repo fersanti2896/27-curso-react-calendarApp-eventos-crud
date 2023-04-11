@@ -14,6 +14,17 @@ export const useCalendarStore = () => {
         dispatch( onSetActiveEvent(calendarEvent) )
     }
 
+    const startLoadingEvents = async() => {
+        try {
+            const { data } = await calendarApi.get('/events');
+            const events = convertEventsToDateEvents( data.events );
+
+            dispatch( onLoadingEvents( events ) );
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const startSavingEvent = async( calendarEvent ) => {
         try {
             if( calendarEvent.id ) {
@@ -38,20 +49,19 @@ export const useCalendarStore = () => {
         
     }
 
-    const startLoadingEvents = async() => {
+    const startDeleteEvent = async( ) => {
         try {
-            const { data } = await calendarApi.get('/events');
-            const events = convertEventsToDateEvents( data.events );
+            /* Eliminando el evento */
+            await calendarApi.delete(`/events/${ activeEvent.id }` );
 
-            dispatch( onLoadingEvents( events ) );
+            dispatch( onDeleteEvent() );            
         } catch (error) {
-            console.log(error);
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error al eliminar!',
+                text: error.response.data.msg
+            });
         }
-    }
-
-    const startDeleteEvent = () => {
-        // TODO: Llegar al backend
-        dispatch( onDeleteEvent() );
     }
 
     return {
