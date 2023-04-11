@@ -1,26 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addHours } from 'date-fns';
-
-const tempEvent = {
-    _id: new Date().getTime(),
-    title: 'Cumpleaños de Marisol',
-    notes: 'Hay que comprar el pastel',
-    start: new Date(),
-    end: addHours( new Date(), 2 ),
-    bgColor: '#fafafa',
-    user: {
-        _id: '123',
-        name: 'Fernando'
-    }
-}
 
 export const caldendarSlice = createSlice({
     name: 'caldendar',
     initialState: {
-        events: [ tempEvent ],
+        isLoadingEvents: true,
+        events: [  ],
         activeEvent: null
     },
     reducers: {
+        onLoadingEvents: ( state, { payload = [] } ) => {
+            state.isLoadingEvents = false;
+            // state.events = payload;
+            payload.forEach( event => {
+                const exists = state.events.some( dbEvent => dbEvent.id === event.id );
+               
+                if( !exists ) {
+                    state.events.push( event );
+                }
+            });
+        },
         onSetActiveEvent: ( state, { payload } ) => {
             state.activeEvent = payload;
         },
@@ -48,4 +46,4 @@ export const caldendarSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent } = caldendarSlice.actions;
+export const { onLoadingEvents, onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent } = caldendarSlice.actions;
